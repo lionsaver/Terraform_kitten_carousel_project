@@ -13,17 +13,18 @@ provider "aws" {
 
 }
 
-locals {
-  link = "https://raw.githubusercontent.com/lionsaver/Terraform_kitten_carousel_project/main/static-web"
-}
+# locals {
+#   link = "https://raw.githubusercontent.com/lionsaver/Terraform_kitten_carousel_project/main/static-web"
+# }
 
 resource "aws_instance" "tff-ec2" {
-  ami             = "ami-006dcf34c09e50022"
+  # ami = "ami-005f9685cb30f234b"
+  ami             = data.aws_ami.tf_ami.id
   instance_type   = "t2.micro"
   key_name        = "first-key"
   security_groups = [aws_security_group.ssh_http.name]
   # security_groups = ["ssh_http"]
-  user_data       = filebase64("user-data.sh")
+  user_data       = "${file("user-data.sh")}"
   tags = {
     Name = "Kitten_Carousel"
   }
@@ -54,6 +55,15 @@ resource "aws_security_group" "ssh_http" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  ingress {
+    description = "Allow Port 443"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   ingress {
     description = "Allow Port 22"
     from_port   = 22

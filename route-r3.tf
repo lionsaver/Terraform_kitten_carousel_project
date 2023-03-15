@@ -10,11 +10,20 @@ resource "aws_route53_record" "site_domain" {
   zone_id = data.aws_route53_zone.hosted_zone.zone_id
   name    = var.record_name
   type    = "A"
-  ttl = 300
-  records = [aws_instance.tff-ec2.public_ip]
+  # ttl = 300
+  # records = [aws_cloudfront_distribution.cf_dist.name]
+  # records = [www.liondevops.click]
 
 #   alias {
 #     name                   = 
 #     zone_id                = 
 #     evaluate_target_health = 
+  alias {
+    name                   = aws_cloudfront_distribution.cf_dist.domain_name
+    zone_id                = aws_cloudfront_distribution.cf_dist.hosted_zone_id
+    evaluate_target_health = true
   }
+
+  
+}
+

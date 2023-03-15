@@ -9,3 +9,7 @@ variable "record_name" {
   description = "sub domain name"
   type = string
 }
+
+variable "ec2_type" {
+  default = "t2.micro"
+}
